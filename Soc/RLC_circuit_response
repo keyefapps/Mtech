@@ -1,0 +1,43 @@
+clc;
+clear;
+
+global R L C V A B C D I0 V0 u;
+%%
+R = 1;
+L = 0.05;
+C = 0.003;
+V = 10;
+V0 = 0; % initial conditions set to zero
+I0 =0;
+
+% Current and Capacitor Voltage taken as state space variables
+
+A = [-R/L -1/L;
+     1/C   0];
+
+B = [1/L;
+     0];
+
+C = [0 1];
+
+D = [0];
+
+u=V;
+
+timespan = 1;
+
+[t,x] = ode45(@rlc_model,[0,timespan],[I0;V0]);
+[y] = C*x'+D*u ;
+
+subplot(2,1,1);
+plot(t,x(:,1));grid on;title('Current Response');xlabel('Time(s)');ylabel('Current(A)');
+
+ subplot(2,1,2);
+plot(t,x(:,2));grid on;title('Voltage Response');xlabel('Time(s)');ylabel('Voltage (V)');
+
+%%
+function xdot = rlc_model(t,x,y)
+global R L C V A B C D I0 V0 u;
+xdot = A*x + B*u;
+
+end
