@@ -1,1 +1,44 @@
+clc;
+clear;
+
+
+global R L V A B C D I0; %declaring the global variables
+
+%%
+
+
+R = 10;
+L = 0.05;
+V =10;
+I0 = 0; % initial inductor current
+
+A = [-R/L]; %inductor current chosen as state variable
+B = [1/L];
+C = [-R];
+D = [1];
+
+u=V;
+timespan = 0.05;
+
+[t,x] = ode45(@rl_model,[0,timespan],[I0]);
+[y] = C*x + D*u; %Output Equation
+
+subplot(2,1,1);
+plot(t,x);grid on;title('Current Response');xlabel('Time(s)');ylabel('Current(A)');
+
+subplot(2,1,2);
+plot(t,y);grid on;title('Voltage Response');xlabel('Time(s)');ylabel('Voltage (V)');
+
+%%General code
+%%
+
+function xdot = rl_model(t,x)
+
+global R L V A B;
+u = V;
+xdot = A*x + B*u;
+end
+
+
+%%Model
 
